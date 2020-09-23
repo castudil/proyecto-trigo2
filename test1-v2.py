@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-# from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor
+import time
 import pandas
-# from boruta import BorutaPy
+from boruta import BorutaPy
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 # from sklearn.decomposition import PCA
@@ -10,7 +11,7 @@ from sklearn.linear_model import LassoCV
 
 
 # leer csv
-datos = pandas.read_csv("data.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
+datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -104,188 +105,191 @@ df_firma_secano_2017.columns = cols
 
 
 
-# ### BORUTA grupo control 2014 #######################
-# forest1 = RandomForestRegressor(
-#     n_jobs = -1, 
-#     max_depth = 5
-# )
-# boruta1 = BorutaPy(
-#     estimator = forest1, 
-#     n_estimators = 'auto',
-#     max_iter = 100 # number of trials to perform
-# )
-
-# # fit Boruta (it accepts np.array, not pd.DataFrame)
-# boruta1.fit(np.array(df_firma_control_2014), np.array(df_chl_control_2014))
-
-# # print results grupo control
-# green_area_control = df_firma_control_2014.columns[boruta1.support_].to_list()
-# blue_area_control = df_firma_control_2014.columns[boruta1.support_weak_].to_list()
-
-# print('Atributos importantes (grupo control 2014):', green_area_control)
-# print('Atributos tentativos (grupo control 2014):', blue_area_control)
-
-# print("")
-
-# ### BORUTA grupo secano 2014 ##########################
-# forest2 = RandomForestRegressor(
-#     n_jobs= -1,
-#     max_depth= 5
-# )
-# boruta2 = BorutaPy(
-#     estimator = forest2,
-#     n_estimators = 'auto',
-#     max_iter = 100
-# )
-
-# boruta2.fit(np.array(df_firma_secano_2014), np.array(df_chl_secano_2014))
-
-# # print results grupo control
-# green_area_secano = df_firma_secano_2014.columns[boruta2.support_].to_list()
-# blue_area_secano = df_firma_secano_2014.columns[boruta2.support_weak_].to_list()
-
-# print('Atributos importantes (grupo secano 2014):', green_area_secano)
-# print('Atributos tentativos (grupo secano 2014):', blue_area_secano)
-
-# print("")
-
-# ### BORUTA grupo control 2015 #######################
-# forest1 = RandomForestRegressor(
-#     n_jobs = -1, 
-#     max_depth = 5
-# )
-# boruta1 = BorutaPy(
-#     estimator = forest1, 
-#     n_estimators = 'auto',
-#     max_iter = 100 # number of trials to perform
-# )
-
-# # fit Boruta (it accepts np.array, not pd.DataFrame)
-# boruta1.fit(np.array(df_firma_control_2015), np.array(df_chl_control_2015))
-
-# # print results grupo control
-# green_area_control = df_firma_control_2015.columns[boruta1.support_].to_list()
-# blue_area_control = df_firma_control_2015.columns[boruta1.support_weak_].to_list()
-
-# print('Atributos importantes (grupo control 2015):', green_area_control)
-# print('Atributos tentativos (grupo control 2015):', blue_area_control)
-
-# print("")
-
-# ### BORUTA grupo secano 2015 ##########################
-# forest2 = RandomForestRegressor(
-#     n_jobs= -1,
-#     max_depth= 5
-# )
-# boruta2 = BorutaPy(
-#     estimator = forest2,
-#     n_estimators = 'auto',
-#     max_iter = 100
-# )
-
-# boruta2.fit(np.array(df_firma_secano_2015), np.array(df_chl_secano_2015))
-
-# # print results grupo control
-# green_area_secano = df_firma_secano_2015.columns[boruta2.support_].to_list()
-# blue_area_secano = df_firma_secano_2015.columns[boruta2.support_weak_].to_list()
-
-# print('Atributos importantes (grupo secano 2015):', green_area_secano)
-# print('Atributos tentativos (grupo secano 2015):', blue_area_secano)
-
-# print("")
-
-
-# ### BORUTA grupo control 2016 #######################
-# forest1 = RandomForestRegressor(
-#     n_jobs = -1, 
-#     max_depth = 5
-# )
-# boruta1 = BorutaPy(
-#     estimator = forest1, 
-#     n_estimators = 'auto',
-#     max_iter = 100 # number of trials to perform
-# )
-
-# # fit Boruta (it accepts np.array, not pd.DataFrame)
-# boruta1.fit(np.array(df_firma_control_2016), np.array(df_chl_control_2016))
-
-# # print results grupo control
-# green_area_control = df_firma_control_2016.columns[boruta1.support_].to_list()
-# blue_area_control = df_firma_control_2016.columns[boruta1.support_weak_].to_list()
-
-# print('Atributos importantes (grupo control 2016):', green_area_control)
-# print('Atributos tentativos (grupo control 2016):', blue_area_control)
-
-# print("")
-
-# ### BORUTA grupo secano 2016 ##########################
-# forest2 = RandomForestRegressor(
-#     n_jobs= -1,
-#     max_depth= 5
-# )
-# boruta2 = BorutaPy(
-#     estimator = forest2,
-#     n_estimators = 'auto',
-#     max_iter = 100
-# )
-
-# boruta2.fit(np.array(df_firma_secano_2016), np.array(df_chl_secano_2016))
-
-# # print results grupo control
-# green_area_secano = df_firma_secano_2016.columns[boruta2.support_].to_list()
-# blue_area_secano = df_firma_secano_2016.columns[boruta2.support_weak_].to_list()
-
-# print('Atributos importantes (grupo secano 2016):', green_area_secano)
-# print('Atributos tentativos (grupo secano 2016):', blue_area_secano)
-
-# print("")
-
-
-# ### BORUTA grupo control 2017 #######################
-# forest1 = RandomForestRegressor(
-#     n_jobs = -1, 
-#     max_depth = 5
-# )
-# boruta1 = BorutaPy(
-#     estimator = forest1, 
-#     n_estimators = 'auto',
-#     max_iter = 100 # number of trials to perform
-# )
-
-# # fit Boruta (it accepts np.array, not pd.DataFrame)
-# boruta1.fit(np.array(df_firma_control_2017), np.array(df_chl_control_2017))
-
-# # print results grupo control
-# green_area_control = df_firma_control_2017.columns[boruta1.support_].to_list()
-# blue_area_control = df_firma_control_2017.columns[boruta1.support_weak_].to_list()
-
-# print('Atributos importantes (grupo control 2017):', green_area_control)
-# print('Atributos tentativos (grupo control 2017):', blue_area_control)
-
-# print("")
-
-# ### BORUTA grupo secano 2017 ##########################
-# forest2 = RandomForestRegressor(
-#     n_jobs= -1,
-#     max_depth= 5
-# )
-# boruta2 = BorutaPy(
-#     estimator = forest2,
-#     n_estimators = 'auto',
-#     max_iter = 100
-# )
-
-# boruta2.fit(np.array(df_firma_secano_2017), np.array(df_chl_secano_2017))
-
-# # print results grupo control
-# green_area_secano = df_firma_secano_2017.columns[boruta2.support_].to_list()
-# blue_area_secano = df_firma_secano_2017.columns[boruta2.support_weak_].to_list()
-
-# print('Atributos importantes (grupo secano 2017):', green_area_secano)
-# print('Atributos tentativos (grupo secano 2017):', blue_area_secano)
-
-# print("")
-
+def boruta():
+    print("Ejecutando Boruta...")
+    ### BORUTA grupo control 2014 #######################
+    forest1 = RandomForestRegressor(
+        n_jobs = -1, 
+        max_depth = 5
+    )
+    boruta1 = BorutaPy(
+        estimator = forest1, 
+        n_estimators = 'auto',
+        max_iter = 100 # number of trials to perform
+    )
+    
+    # fit Boruta (it accepts np.array, not pd.DataFrame)
+    boruta1.fit(np.array(df_firma_control_2014), np.array(df_chl_control_2014))
+    
+    # print results grupo control
+    green_area_control = df_firma_control_2014.columns[boruta1.support_].to_list()
+    blue_area_control = df_firma_control_2014.columns[boruta1.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo control 2014):', green_area_control)
+    print('Atributos tentativos (grupo control 2014):', blue_area_control)
+    
+    print("")
+    
+    ### BORUTA grupo secano 2014 ##########################
+    forest2 = RandomForestRegressor(
+        n_jobs= -1,
+        max_depth= 5
+    )
+    boruta2 = BorutaPy(
+        estimator = forest2,
+        n_estimators = 'auto',
+        max_iter = 100
+    )
+    
+    boruta2.fit(np.array(df_firma_secano_2014), np.array(df_chl_secano_2014))
+    
+    # print results grupo control
+    green_area_secano = df_firma_secano_2014.columns[boruta2.support_].to_list()
+    blue_area_secano = df_firma_secano_2014.columns[boruta2.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo secano 2014):', green_area_secano)
+    print('Atributos tentativos (grupo secano 2014):', blue_area_secano)
+    
+    print("")
+    
+    ### BORUTA grupo control 2015 #######################
+    forest1 = RandomForestRegressor(
+        n_jobs = -1, 
+        max_depth = 5
+    )
+    boruta1 = BorutaPy(
+        estimator = forest1, 
+        n_estimators = 'auto',
+        max_iter = 100 # number of trials to perform
+    )
+    
+    # fit Boruta (it accepts np.array, not pd.DataFrame)
+    boruta1.fit(np.array(df_firma_control_2015), np.array(df_chl_control_2015))
+    
+    # print results grupo control
+    green_area_control = df_firma_control_2015.columns[boruta1.support_].to_list()
+    blue_area_control = df_firma_control_2015.columns[boruta1.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo control 2015):', green_area_control)
+    print('Atributos tentativos (grupo control 2015):', blue_area_control)
+    
+    print("")
+    
+    ### BORUTA grupo secano 2015 ##########################
+    forest2 = RandomForestRegressor(
+        n_jobs= -1,
+        max_depth= 5
+    )
+    boruta2 = BorutaPy(
+        estimator = forest2,
+        n_estimators = 'auto',
+        max_iter = 100
+    )
+    
+    boruta2.fit(np.array(df_firma_secano_2015), np.array(df_chl_secano_2015))
+    
+    # print results grupo control
+    green_area_secano = df_firma_secano_2015.columns[boruta2.support_].to_list()
+    blue_area_secano = df_firma_secano_2015.columns[boruta2.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo secano 2015):', green_area_secano)
+    print('Atributos tentativos (grupo secano 2015):', blue_area_secano)
+    
+    print("")
+    
+    
+    ### BORUTA grupo control 2016 #######################
+    forest1 = RandomForestRegressor(
+        n_jobs = -1, 
+        max_depth = 5
+    )
+    boruta1 = BorutaPy(
+        estimator = forest1, 
+        n_estimators = 'auto',
+        max_iter = 100 # number of trials to perform
+    )
+    
+    # fit Boruta (it accepts np.array, not pd.DataFrame)
+    boruta1.fit(np.array(df_firma_control_2016), np.array(df_chl_control_2016))
+    
+    # print results grupo control
+    green_area_control = df_firma_control_2016.columns[boruta1.support_].to_list()
+    blue_area_control = df_firma_control_2016.columns[boruta1.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo control 2016):', green_area_control)
+    print('Atributos tentativos (grupo control 2016):', blue_area_control)
+    
+    print("")
+    
+    ### BORUTA grupo secano 2016 ##########################
+    forest2 = RandomForestRegressor(
+        n_jobs= -1,
+        max_depth= 5
+    )
+    boruta2 = BorutaPy(
+        estimator = forest2,
+        n_estimators = 'auto',
+        max_iter = 100
+    )
+    
+    boruta2.fit(np.array(df_firma_secano_2016), np.array(df_chl_secano_2016))
+    
+    # print results grupo control
+    green_area_secano = df_firma_secano_2016.columns[boruta2.support_].to_list()
+    blue_area_secano = df_firma_secano_2016.columns[boruta2.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo secano 2016):', green_area_secano)
+    print('Atributos tentativos (grupo secano 2016):', blue_area_secano)
+    
+    print("")
+    
+    
+    ### BORUTA grupo control 2017 #######################
+    forest1 = RandomForestRegressor(
+        n_jobs = -1, 
+        max_depth = 5
+    )
+    boruta1 = BorutaPy(
+        estimator = forest1, 
+        n_estimators = 'auto',
+        max_iter = 100 # number of trials to perform
+    )
+    
+    # fit Boruta (it accepts np.array, not pd.DataFrame)
+    boruta1.fit(np.array(df_firma_control_2017), np.array(df_chl_control_2017))
+    
+    # print results grupo control
+    green_area_control = df_firma_control_2017.columns[boruta1.support_].to_list()
+    blue_area_control = df_firma_control_2017.columns[boruta1.support_weak_].to_list()
+    
+    print('Atributos importantes (grupo control 2017):', green_area_control)
+    print('Atributos tentativos (grupo control 2017):', blue_area_control)
+    
+    print("")
+    
+    ### BORUTA grupo secano 2017 ##########################
+    # forest2 = RandomForestRegressor(
+    #     n_jobs= -1,
+    #     max_depth= 5
+    # )
+    # boruta2 = BorutaPy(
+    #     estimator = forest2,
+    #     n_estimators = 'auto',
+    #     max_iter = 100
+    # )
+    
+    # boruta2.fit(np.array(df_firma_secano_2017), np.array(df_chl_secano_2017))
+    
+    # # print results grupo control
+    # green_area_secano = df_firma_secano_2017.columns[boruta2.support_].to_list()
+    # blue_area_secano = df_firma_secano_2017.columns[boruta2.support_weak_].to_list()
+    
+    # print('Atributos importantes (grupo secano 2017):', green_area_secano)
+    # print('Atributos tentativos (grupo secano 2017):', blue_area_secano)
+    
+    # print("")
+    
+    return # fin boruta -------------------------------------------------------
 
 # =============================================================================
 # print(df_chl_seca.shape)
@@ -300,7 +304,7 @@ df_firma_secano_2017.columns = cols
 # =============================================================================
 
 
-# ### PCA grupo control ###################################
+#### PCA grupo control ###################################
 # pca_control = PCA(.9) # PCA con 90% de varianza
 
 # pca_control.fit_transform(df_firma_control)
@@ -333,152 +337,186 @@ df_firma_secano_2017.columns = cols
 # print("")
 
 
-# ### LASSO feature selection ####################
-# # Grupo control 2014
-# lasso_control = LassoCV(max_iter = 6000).fit(df_firma_control_2014, df_chl_control_2014)
-# importancia_c = np.abs(lasso_control.coef_)
-# #print(importancia_c)
+#### LASSO feature selection ####################
+def lasso():
+    print("Ejecutando LASSO...")
+    # # Grupo control 2014
+    # lasso_control = LassoCV(max_iter = 6000).fit(df_firma_control_2014, df_chl_control_2014)
+    # importancia_c = np.abs(lasso_control.coef_)
+    # #print(importancia_c)
+    
+    # # Buscaremos los 30 atributos más importantes
+    # # para estudiar su comportamiento
+    # # Fijamos el humbral sobre el atributo nro 31
+    # attr_31 = importancia_c.argsort()[-31]
+    # humbral = importancia_c[attr_31] + 0.01
+    
+    # attrs_c = (-importancia_c).argsort()[:30]
+    # cols_aux = np.array(cols)[attrs_c]
+    
+    # print("Atributos seleccionados (control 2014): {}".format(cols_aux))
+    # print("")
+    # # nota: luego de correr por primera vez el programa,
+    # # cantidad máxima tentativa de atributos: 37
+    
+    # # Grupo secano 2014
+    # lasso_secano = LassoCV(max_iter = 5000).fit(df_firma_secano_2014, df_chl_secano_2014)
+    # importancia_s = np.abs(lasso_secano.coef_)
+    # #print(importancia_s)
+    
+    # attr_31 = importancia_s.argsort()[-31]
+    # humbral = importancia_s[attr_31] + 0.01
+    
+    # attrs_s = (-importancia_s).argsort()[:30]
+    # cols_aux = np.array(cols)[attrs_s]
+    
+    # print("Atributos seleccionados (secano 2014): {}".format(cols_aux))
+    # print("")
+    
+    
+    # Grupo control 2015
+    lasso_control = LassoCV(max_iter = 6000).fit(df_firma_control_2015, df_chl_control_2015)
+    importancia_c = np.abs(lasso_control.coef_)
+    #print(importancia_c)
+    
+    # Buscaremos los 30 atributos más importantes
+    # para estudiar su comportamiento
+    # Fijamos el humbral sobre el atributo nro 31
+    attr_31 = importancia_c.argsort()[-31]
+    humbral = importancia_c[attr_31] + 0.01
+    
+    attrs_c = (-importancia_c).argsort()[:30]
+    cols_aux = np.array(cols)[attrs_c]
+    
+    print("Atributos seleccionados (control 2015): {}".format(cols_aux))
+    print("")
+    # nota: luego de correr por primera vez el programa,
+    # cantidad máxima tentativa de atributos: 37
+    
+    # Grupo secano 2015
+    lasso_secano = LassoCV(max_iter = 6000).fit(df_firma_secano_2015, df_chl_secano_2015)
+    importancia_s = np.abs(lasso_secano.coef_)
+    #print(importancia_s)
+    
+    attr_31 = importancia_s.argsort()[-31]
+    humbral = importancia_s[attr_31] + 0.01
+    
+    attrs_s = (-importancia_s).argsort()[:30]
+    cols_aux = np.array(cols)[attrs_s]
+    
+    print("Atributos seleccionados (secano 2015): {}".format(cols_aux))
+    print("")
+    
+    
+    # Grupo control 2016
+    lasso_control = LassoCV(max_iter = 5000).fit(df_firma_control_2016, df_chl_control_2016)
+    importancia_c = np.abs(lasso_control.coef_)
+    #print(importancia_c)
+    
+    # Buscaremos los 30 atributos más importantes
+    # para estudiar su comportamiento
+    # Fijamos el humbral sobre el atributo nro 31
+    attr_31 = importancia_c.argsort()[-31]
+    humbral = importancia_c[attr_31] + 0.01
+    
+    attrs_c = (-importancia_c).argsort()[:30]
+    cols_aux = np.array(cols)[attrs_c]
+    
+    print("Atributos seleccionados (control 2016): {}".format(cols_aux))
+    print("")
+    # nota: luego de correr por primera vez el programa,
+    # cantidad máxima tentativa de atributos: 37
+    
+    # Grupo secano 2016
+    lasso_secano = LassoCV(max_iter = 6000).fit(df_firma_secano_2016, df_chl_secano_2016)
+    importancia_s = np.abs(lasso_secano.coef_)
+    #print(importancia_s)
+    
+    attr_31 = importancia_s.argsort()[-31]
+    humbral = importancia_s[attr_31] + 0.01
+    
+    attrs_s = (-importancia_s).argsort()[:30]
+    cols_aux = np.array(cols)[attrs_s]
+    
+    print("Atributos seleccionados (secano 2016): {}".format(cols_aux))
+    print("")
+    
+    
+    # # Grupo control 2017
+    # lasso_control = LassoCV(max_iter = 6000).fit(df_firma_control_2017, df_chl_control_2017)
+    # importancia_c = np.abs(lasso_control.coef_)
+    # print(importancia_c)
+    
+    # # Buscaremos los 30 atributos más importantes
+    # # para estudiar su comportamiento
+    # # Fijamos el humbral sobre el atributo nro 31
+    # attr_31 = importancia_c.argsort()[-31]
+    # humbral = importancia_c[attr_31] + 0.01
+    
+    # attrs_c = (-importancia_c).argsort()[:30]
+    # cols_aux = np.array(cols)[attrs_c]
+    
+    # print("Atributos seleccionados (control 2017): {}".format(cols_aux))
+    # print("")
+    # # nota: luego de correr por primera vez el programa,
+    # # cantidad máxima tentativa de atributos: 37
+    
+    # # Grupo secano 2017
+    # lasso_secano = LassoCV(max_iter = 5000).fit(df_firma_secano_2017, df_chl_secano_2017)
+    # importancia_s = np.abs(lasso_secano.coef_)
+    # print(importancia_s)
+    
+    # attr_31 = importancia_s.argsort()[-31]
+    # humbral = importancia_s[attr_31] + 0.01
+    
+    # attrs_s = (-importancia_s).argsort()[:30]
+    # cols_aux = np.array(cols)[attrs_s]
+    
+    # print("Atributos seleccionados (secano 2017): {}".format(cols_aux))
+    # print("")
+    return # fin lasso --------------------------------------------------------
 
-# # Buscaremos los 30 atributos más importantes
-# # para estudiar su comportamiento
-# # Fijamos el humbral sobre el atributo nro 31
-# attr_31 = importancia_c.argsort()[-31]
-# humbral = importancia_c[attr_31] + 0.01
+print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
+print("1:\tBoruta.")
+print("2:\tLasso.")
+print("3:\tTest.")
+print("4:\tSalir.")
 
-# attrs_c = (-importancia_c).argsort()[:30]
-# cols_aux = np.array(cols)[attrs_c]
+op = input("Introduzca opción: ")
 
-# print("Atributos seleccionados (control 2014): {}".format(cols_aux))
-# print("")
-# # nota: luego de correr por primera vez el programa,
-# # cantidad máxima tentativa de atributos: 37
-
-# # Grupo secano 2014
-# lasso_secano = LassoCV(max_iter = 5000).fit(df_firma_secano_2014, df_chl_secano_2014)
-# importancia_s = np.abs(lasso_secano.coef_)
-# #print(importancia_s)
-
-# attr_31 = importancia_s.argsort()[-31]
-# humbral = importancia_s[attr_31] + 0.01
-
-# attrs_s = (-importancia_s).argsort()[:30]
-# cols_aux = np.array(cols)[attrs_s]
-
-# print("Atributos seleccionados (secano 2014): {}".format(cols_aux))
-# print("")
-
-
-# Grupo control 2015
-lasso_control = LassoCV(max_iter = 6000).fit(df_firma_control_2015, df_chl_control_2015)
-importancia_c = np.abs(lasso_control.coef_)
-#print(importancia_c)
-
-# Buscaremos los 30 atributos más importantes
-# para estudiar su comportamiento
-# Fijamos el humbral sobre el atributo nro 31
-attr_31 = importancia_c.argsort()[-31]
-humbral = importancia_c[attr_31] + 0.01
-
-attrs_c = (-importancia_c).argsort()[:30]
-cols_aux = np.array(cols)[attrs_c]
-
-print("Atributos seleccionados (control 2015): {}".format(cols_aux))
-print("")
-# nota: luego de correr por primera vez el programa,
-# cantidad máxima tentativa de atributos: 37
-
-# Grupo secano 2015
-lasso_secano = LassoCV(max_iter = 6000).fit(df_firma_secano_2015, df_chl_secano_2015)
-importancia_s = np.abs(lasso_secano.coef_)
-#print(importancia_s)
-
-attr_31 = importancia_s.argsort()[-31]
-humbral = importancia_s[attr_31] + 0.01
-
-attrs_s = (-importancia_s).argsort()[:30]
-cols_aux = np.array(cols)[attrs_s]
-
-print("Atributos seleccionados (secano 2015): {}".format(cols_aux))
-print("")
-
-
-# Grupo control 2016
-lasso_control = LassoCV(max_iter = 5000).fit(df_firma_control_2016, df_chl_control_2016)
-importancia_c = np.abs(lasso_control.coef_)
-#print(importancia_c)
-
-# Buscaremos los 30 atributos más importantes
-# para estudiar su comportamiento
-# Fijamos el humbral sobre el atributo nro 31
-attr_31 = importancia_c.argsort()[-31]
-humbral = importancia_c[attr_31] + 0.01
-
-attrs_c = (-importancia_c).argsort()[:30]
-cols_aux = np.array(cols)[attrs_c]
-
-print("Atributos seleccionados (control 2016): {}".format(cols_aux))
-print("")
-# nota: luego de correr por primera vez el programa,
-# cantidad máxima tentativa de atributos: 37
-
-# Grupo secano 2016
-lasso_secano = LassoCV(max_iter = 6000).fit(df_firma_secano_2016, df_chl_secano_2016)
-importancia_s = np.abs(lasso_secano.coef_)
-#print(importancia_s)
-
-attr_31 = importancia_s.argsort()[-31]
-humbral = importancia_s[attr_31] + 0.01
-
-attrs_s = (-importancia_s).argsort()[:30]
-cols_aux = np.array(cols)[attrs_s]
-
-print("Atributos seleccionados (secano 2016): {}".format(cols_aux))
-print("")
-
-
-# # Grupo control 2017
-# lasso_control = LassoCV(max_iter = 6000).fit(df_firma_control_2017, df_chl_control_2017)
-# importancia_c = np.abs(lasso_control.coef_)
-# print(importancia_c)
-
-# # Buscaremos los 30 atributos más importantes
-# # para estudiar su comportamiento
-# # Fijamos el humbral sobre el atributo nro 31
-# attr_31 = importancia_c.argsort()[-31]
-# humbral = importancia_c[attr_31] + 0.01
-
-# attrs_c = (-importancia_c).argsort()[:30]
-# cols_aux = np.array(cols)[attrs_c]
-
-# print("Atributos seleccionados (control 2017): {}".format(cols_aux))
-# print("")
-# # nota: luego de correr por primera vez el programa,
-# # cantidad máxima tentativa de atributos: 37
-
-# # Grupo secano 2014
-# lasso_secano = LassoCV(max_iter = 5000).fit(df_firma_secano_2017, df_chl_secano_2017)
-# importancia_s = np.abs(lasso_secano.coef_)
-# print(importancia_s)
-
-# attr_31 = importancia_s.argsort()[-31]
-# humbral = importancia_s[attr_31] + 0.01
-
-# attrs_s = (-importancia_s).argsort()[:30]
-# cols_aux = np.array(cols)[attrs_s]
-
-# print("Atributos seleccionados (secano 2017): {}".format(cols_aux))
-# print("")
-
-
-
-
-
-
-
-
-
-
-
+while 1:
+    if op == '1':
+        start = time.perf_counter()
+        boruta()
+        end = time.perf_counter()
+        print(f"Tiempo de ejecución: {end - start:0.4f} segundos.")
+    
+    elif op == '2':
+        start = time.perf_counter()
+        lasso()
+        end = time.perf_counter()
+        print(f"Tiempo de ejecución: {end - start:0.4f} segundos.")
+        
+    elif op == '3':
+        start = time.perf_counter()
+        print("No hago nada, solo testeo....")
+        end = time.perf_counter()
+        print(f"Tiempo de ejecución: {end - start:0.4f} segundos.")
+        
+    elif op == '4':
+        print("Fin del programa.")
+        break
+        
+    else:
+        print("Opción no válida, intente nuevamente.")
+    
+    print()
+    print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
+    print("1:\tBoruta.")
+    print("2:\tLasso.")
+    print("3:\tTest.")
+    print("4:\tSalir.")
+    op = input("Introduzca opción: ")
 
 
 
