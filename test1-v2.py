@@ -395,19 +395,38 @@ def boruta():
 #### LASSO feature selection ####################
 def lasso():
     print("Ejecutando LASSO...")
+    max = 150
+    # recordar: contar los atributos con importancia >0 para establecer threshold
     # Grupo control 2014
     lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2014, control_2014.loc[ : , "Chl"])
     importancia_c = np.abs(lasso_control.coef_)
-    #print(importancia_c)
+    # print(importancia_c[:max]) # primeros 100
+    # print(importancia_c[::-1][:max]) # ultimos 100
+    # print(importancia_c.argsort()[::-1][:max]) # primeros 100 indices ordenados desc
     
     # Buscaremos los 30 atributos más importantes
     # para estudiar su comportamiento
     # Fijamos el humbral sobre el atributo nro 31
-    attr_31 = importancia_c.argsort()[-31]
-    humbral = importancia_c[attr_31] + 0.01
+    # attr_31 = importancia_c.argsort()[-31]
+    # humbral = importancia_c[attr_n] + 0.01
     
-    attrs_c = (-importancia_c).argsort()[:30]
+    # Este bucle busca en la lista de valores de importancia ordenadas
+    # de mayor a menor el índice del primer valor en 0 para mostrar 
+    # esa cantidad o un máximo 150 (max) elementos.
+    for i in range(len(importancia_c)):
+        if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            # print("indice del primer valor 0: " + str(attr_n))
+            break
+    
+    attrs_c = importancia_c.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_c]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2014): {}".format(cols_aux))
     print("")
@@ -415,15 +434,27 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2014
-    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2014, secano_2014.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 20000).fit(firma_secano_2014, secano_2014.loc[ : , "Chl"])
     importancia_s = np.abs(lasso_secano.coef_)
     #print(importancia_s)
     
-    attr_31 = importancia_s.argsort()[-31]
-    humbral = importancia_s[attr_31] + 0.01
+    # attr_31 = importancia_s.argsort()[-31]
+    # humbral = importancia_s[attr_31] + 0.01
     
-    attrs_s = (-importancia_s).argsort()[:30]
+    for i in range(len(importancia_s)):
+        if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
+    
+    attrs_s = importancia_s.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_s]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2014): {}".format(cols_aux))
     print("")
@@ -432,16 +463,30 @@ def lasso():
     # Grupo control 2015
     lasso_control = LassoCV(max_iter = 6000).fit(firma_control_2015, control_2015.loc[ : , "Chl"])
     importancia_c = np.abs(lasso_control.coef_)
-    #print(importancia_c)
+    # print("grupo control 2015")
+    # print(importancia_c.argsort()[::-1][:100])
+    # print((-importancia_c).argsort()[:100])
     
     # Buscaremos los 30 atributos más importantes
     # para estudiar su comportamiento
     # Fijamos el humbral sobre el atributo nro 31
-    attr_31 = importancia_c.argsort()[-31]
-    humbral = importancia_c[attr_31] + 0.01
+    # attr_31 = importancia_c.argsort()[-31]
+    # humbral = importancia_c[attr_31] + 0.01
     
-    attrs_c = (-importancia_c).argsort()[:30]
+    for i in range(len(importancia_c)):
+        if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
+    
+    attrs_c = importancia_c.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_c]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2015): {}".format(cols_aux))
     print("")
@@ -449,33 +494,57 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2015
-    lasso_secano = LassoCV(max_iter = 6000).fit(firma_secano_2015, secano_2015.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 26000).fit(firma_secano_2015, secano_2015.loc[ : , "Chl"])
     importancia_s = np.abs(lasso_secano.coef_)
     #print(importancia_s)
     
-    attr_31 = importancia_s.argsort()[-31]
-    humbral = importancia_s[attr_31] + 0.01
+    # attr_31 = importancia_s.argsort()[-31]
+    # humbral = importancia_s[attr_31] + 0.01
+
+    for i in range(len(importancia_s)):
+        if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
     
-    attrs_s = (-importancia_s).argsort()[:30]
+    attrs_s = importancia_s.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_s]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2015): {}".format(cols_aux))
     print("")
     
     
     # Grupo control 2016
-    lasso_control = LassoCV(max_iter = 6000).fit(firma_control_2016, control_2016.loc[ : , "Chl"])
+    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2016, control_2016.loc[ : , "Chl"])
     importancia_c = np.abs(lasso_control.coef_)
     #print(importancia_c)
     
     # Buscaremos los 30 atributos más importantes
     # para estudiar su comportamiento
     # Fijamos el humbral sobre el atributo nro 31
-    attr_31 = importancia_c.argsort()[-31]
-    humbral = importancia_c[attr_31] + 0.01
+    # attr_31 = importancia_c.argsort()[-31]
+    # humbral = importancia_c[attr_31] + 0.01
     
-    attrs_c = (-importancia_c).argsort()[:30]
+    for i in range(len(importancia_c)):
+        if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
+    
+    attrs_c = importancia_c.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_c]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2016): {}".format(cols_aux))
     print("")
@@ -483,33 +552,58 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2016
-    lasso_secano = LassoCV(max_iter = 6000).fit(firma_secano_2016, secano_2016.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2016, secano_2016.loc[ : , "Chl"])
     importancia_s = np.abs(lasso_secano.coef_)
     #print(importancia_s)
     
-    attr_31 = importancia_s.argsort()[-31]
-    humbral = importancia_s[attr_31] + 0.01
+    # attr_31 = importancia_s.argsort()[-31]
+    # humbral = importancia_s[attr_31] + 0.01
     
-    attrs_s = (-importancia_s).argsort()[:30]
+    
+    for i in range(len(importancia_s)):
+        if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
+    
+    attrs_s = importancia_s.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_s]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2016): {}".format(cols_aux))
     print("")
     
     
     # Grupo control 2017
-    lasso_control = LassoCV(max_iter = 6000).fit(firma_control_2017, control_2017.loc[ : , "Chl"])
+    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2017, control_2017.loc[ : , "Chl"])
     importancia_c = np.abs(lasso_control.coef_)
-    print(importancia_c)
+    # print(importancia_c)
     
     # Buscaremos los 30 atributos más importantes
     # para estudiar su comportamiento
     # Fijamos el humbral sobre el atributo nro 31
-    attr_31 = importancia_c.argsort()[-31]
-    humbral = importancia_c[attr_31] + 0.01
+    # attr_31 = importancia_c.argsort()[-31]
+    #humbral = importancia_c[attr_31] + 0.01
     
-    attrs_c = (-importancia_c).argsort()[:30]
+    for i in range(len(importancia_c)):
+        if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
+    
+    attrs_c = importancia_c.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_c]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2017): {}".format(cols_aux))
     print("")
@@ -517,15 +611,28 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2017
-    lasso_secano = LassoCV(max_iter = 6000).fit(firma_secano_2017, secano_2017.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2017, secano_2017.loc[ : , "Chl"])
     importancia_s = np.abs(lasso_secano.coef_)
-    print(importancia_s)
+    # print(importancia_s)
     
-    attr_31 = importancia_s.argsort()[-31]
-    humbral = importancia_s[attr_31] + 0.01
+    # attr_31 = importancia_s.argsort()[-31]
+    # humbral = importancia_s[attr_31] + 0.01
     
-    attrs_s = (-importancia_s).argsort()[:30]
+    
+    for i in range(len(importancia_s)):
+        if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
+            attr_n = i
+            print("indice del primer valor 0: " + str(attr_n))
+            break
+        
+    attrs_s = importancia_s.argsort()[::-1][:attr_n]
     cols_aux = np.array(cols)[attrs_s]
+    
+    # convertir str a int
+    cols_aux = cols_aux.astype(int)
+        
+    # ordenamos en orden ascendente
+    cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2017): {}".format(cols_aux))
     print("")
