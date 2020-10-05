@@ -8,7 +8,18 @@ from sklearn.preprocessing import StandardScaler
 # from sklearn.decomposition import PCA
 # from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LassoCV
+from sklearn.feature_selection import RFE
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedKFold
+from sklearn.model_selection import RepeatedStratifiedKFold
+from sklearn.feature_selection import RFECV
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.pipeline import Pipeline
 
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import f_regression
+from sklearn.feature_selection import mutual_info_regression
+import matplotlib.pyplot as plt
 
 # leer csv
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
@@ -639,12 +650,120 @@ def lasso():
     return # fin lasso --------------------------------------------------------
 
 
+def rec_feat_elim():
+    print("Ejecutando Recursive Feature Elimination...")
+    # Grupo control 2014 ######################
+    rfecv = RFECV(estimator = DecisionTreeRegressor)
+    model = DecisionTreeRegressor()
+    pipeline = Pipeline(steps = [('s', rfecv), ('m', model)])
+    
+    # evaluar el modelo
+    cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+    n_scores = cross_val_score(pipeline, firma_control_2014, control_2014.loc[ : , "Chl"], scoring='accuracy', cv = cv, n_jobs=-1, error_score='raise')
+    
+    print('Nro óptimo de atributos: {}'.format(rfecv.n_features_))
+    
+    
+    return # fin RFE ---------------------------------------------------------
+
+def kbest():
+    print("Ejecutando K-Best...")
+    # grupo control 2014 #####################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_control_2014, control_2014.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo control 2014")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo secano 2014 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_secano_2014, secano_2014.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo secano 2014")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo control 2015 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_control_2015, control_2015.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo control 2015")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo secano 2015 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_secano_2015, secano_2015.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo secano 2015")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo control 2016 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_control_2016, control_2016.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo control 2016")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo secano 2016 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_secano_2016, secano_2016.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo secano 2016")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo control 2017 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_control_2017, control_2017.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo control 2017")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    
+    # grupo secano 2017 ######################
+    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector.fit(firma_secano_2017, secano_2017.loc[:, "Chl"])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("Grupo secano 2017")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("F-value")
+    plt.show()
+    return # fin k-best-------------------------------------------------------
+
 # Inicio del programa ########################################################
 
 print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
 print("1:\tBoruta.")
 print("2:\tLasso.")
 print("3:\tTest.")
+print("4:\tK-Best.")
 print("5:\tTodos los anteriores.")
 print("6:\tSalir.")
 
@@ -668,6 +787,12 @@ while 1:
         print("No hago nada, solo testeo....")
         end = time.perf_counter()
         print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
+    
+    elif op == '4':
+        start = time.perf_counter()
+        kbest()
+        end = time.perf_counter()
+        print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
         
     elif op == '5':
         start = time.perf_counter()
@@ -688,6 +813,7 @@ while 1:
     print("1:\tBoruta.")
     print("2:\tLasso.")
     print("3:\tTest.")
+    print("4:\tK-Best.")
     print("5:\tTodos los anteriores.")
     print("6:\tSalir.")
     op = input("Introduzca opción: ")
