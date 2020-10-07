@@ -8,21 +8,26 @@ from sklearn.preprocessing import StandardScaler
 # from sklearn.decomposition import PCA
 # from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LinearRegression
 from sklearn.feature_selection import RFE
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import RepeatedKFold
-from sklearn.model_selection import RepeatedStratifiedKFold
-from sklearn.feature_selection import RFECV
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split
+# from sklearn.model_selection import cross_val_score
+# from sklearn.model_selection import RepeatedKFold
+# from sklearn.model_selection import RepeatedStratifiedKFold
+# from sklearn.feature_selection import RFECV
+# from sklearn.tree import DecisionTreeRegressor
+# from sklearn.pipeline import Pipeline
 
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_regression
-from sklearn.feature_selection import mutual_info_regression
+# from sklearn.feature_selection import mutual_info_regression
 import matplotlib.pyplot as plt
 
 # leer csv
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
+
+# Variable a predecir
+target = "VPD"
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -37,7 +42,7 @@ filtro2_2014 = datos[datos["ANIO"] == 2014]
 filtro1_2014 = filtro1_2014[filtro1_2014["CONDICION"] != "SECANO"]
 filtro2_2014 = filtro2_2014[filtro2_2014["CONDICION"] == "SECANO"]
 
-df_chl_control_2014 = filtro1_2014.loc[ : , "Chl"]
+df_chl_control_2014 = filtro1_2014.loc[ : , target]
 df_firma_control_2014 = filtro1_2014.loc[ : , "350":"2500"]
 cols = list(df_firma_control_2014.columns.values) # recuperamos los nombres de columnas
 
@@ -45,7 +50,7 @@ cols = list(df_firma_control_2014.columns.values) # recuperamos los nombres de c
 df_firma_control_2014 = pandas.DataFrame(StandardScaler().fit_transform(df_firma_control_2014)) 
 df_firma_control_2014.columns = cols
 
-df_chl_secano_2014 = filtro2_2014.loc[ : , "Chl"]
+df_chl_secano_2014 = filtro2_2014.loc[ : , target]
 df_firma_secano_2014 = filtro2_2014.loc[ : , "350":"2500"]
 
 # Estandarizar secano 2014
@@ -72,7 +77,7 @@ filtro2_2015 = datos[datos["ANIO"] == 2015]
 filtro1_2015 = filtro1_2015[filtro1_2015["CONDICION"] != "SECANO"]
 filtro2_2015 = filtro2_2015[filtro2_2015["CONDICION"] == "SECANO"]
 
-df_chl_control_2015 = filtro1_2015.loc[ : , "Chl"]
+df_chl_control_2015 = filtro1_2015.loc[ : , target]
 df_firma_control_2015 = filtro1_2015.loc[ : , "350":"2500"]
 cols = list(df_firma_control_2015.columns.values) # recuperamos los nombres de columnas
 
@@ -80,7 +85,7 @@ cols = list(df_firma_control_2015.columns.values) # recuperamos los nombres de c
 df_firma_control_2015 = pandas.DataFrame(StandardScaler().fit_transform(df_firma_control_2015)) 
 df_firma_control_2015.columns = cols
 
-df_chl_secano_2015 = filtro2_2015.loc[ : , "Chl"]
+df_chl_secano_2015 = filtro2_2015.loc[ : , target]
 df_firma_secano_2015 = filtro2_2015.loc[ : , "350":"2500"]
 
 # Estandarizar secano 2015
@@ -108,7 +113,7 @@ filtro1_2016 = filtro1_2016[filtro1_2016["CONDICION"] != "SECANO"]
 filtro2_2016 = filtro2_2016[filtro2_2016["CONDICION"] == "SECANO"]
 
 
-df_chl_control_2016 = filtro1_2016.loc[ : , "Chl"]
+df_chl_control_2016 = filtro1_2016.loc[ : , target]
 df_firma_control_2016 = filtro1_2016.loc[ : , "350":"2499"]
 cols = list(df_firma_control_2016.columns.values) # recuperamos los nombres de columnas
 
@@ -116,7 +121,7 @@ cols = list(df_firma_control_2016.columns.values) # recuperamos los nombres de c
 df_firma_control_2016 = pandas.DataFrame(StandardScaler().fit_transform(df_firma_control_2016)) 
 df_firma_control_2016.columns = cols
 
-df_chl_secano_2016 = filtro2_2016.loc[ : , "Chl"]
+df_chl_secano_2016 = filtro2_2016.loc[ : , target]
 df_firma_secano_2016 = filtro2_2016.loc[ : , "350":"2499"]
 
 # Estandarizar secano 2016
@@ -143,7 +148,7 @@ filtro2_2017 = datos[datos["ANIO"] == 2017]
 filtro1_2017 = filtro1_2017[filtro1_2017["CONDICION"] != "SECANO"]
 filtro2_2017 = filtro2_2017[filtro2_2017["CONDICION"] == "SECANO"]
 
-df_chl_control_2017 = filtro1_2017.loc[ : , "Chl"]
+df_chl_control_2017 = filtro1_2017.loc[ : , target]
 df_firma_control_2017 = filtro1_2017.loc[ : , "350":"2500"]
 cols = list(df_firma_control_2017.columns.values) # recuperamos los nombres de columnas
 
@@ -151,7 +156,7 @@ cols = list(df_firma_control_2017.columns.values) # recuperamos los nombres de c
 df_firma_control_2017 = pandas.DataFrame(StandardScaler().fit_transform(df_firma_control_2017)) 
 df_firma_control_2017.columns = cols
 
-df_chl_secano_2017 = filtro2_2017.loc[ : , "Chl"]
+df_chl_secano_2017 = filtro2_2017.loc[ : , target]
 df_firma_secano_2017 = filtro2_2017.loc[ : , "350":"2500"]
 
 # Estandarizar secano 2017
@@ -185,7 +190,7 @@ def boruta():
     )
     
     # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2014), np.array(control_2014.loc[ : , "Chl"]))
+    boruta1.fit(np.array(firma_control_2014), np.array(control_2014.loc[ : , target]))
     
     # print results grupo control
     green_area_control = firma_control_2014.columns[boruta1.support_].to_list()
@@ -207,7 +212,7 @@ def boruta():
         max_iter = 100
     )
     
-    boruta2.fit(np.array(firma_secano_2014), np.array(secano_2014.loc[ : , "Chl"]))
+    boruta2.fit(np.array(firma_secano_2014), np.array(secano_2014.loc[ : , target]))
     
     # print results grupo control
     green_area_secano = firma_secano_2014.columns[boruta2.support_].to_list()
@@ -230,7 +235,7 @@ def boruta():
     )
     
     # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2015), np.array(control_2015.loc[ : , "Chl"]))
+    boruta1.fit(np.array(firma_control_2015), np.array(control_2015.loc[ : , target]))
     
     # print results grupo control
     green_area_control = firma_control_2015.columns[boruta1.support_].to_list()
@@ -252,7 +257,7 @@ def boruta():
         max_iter = 100
     )
     
-    boruta2.fit(np.array(firma_secano_2015), np.array(secano_2015.loc[ : , "Chl"]))
+    boruta2.fit(np.array(firma_secano_2015), np.array(secano_2015.loc[ : , target]))
     
     # print results grupo control
     green_area_secano = firma_secano_2015.columns[boruta2.support_].to_list()
@@ -276,7 +281,7 @@ def boruta():
     )
     
     # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2016), np.array(control_2016.loc[ : , "Chl"]))
+    boruta1.fit(np.array(firma_control_2016), np.array(control_2016.loc[ : , target]))
     
     # print results grupo control
     green_area_control = firma_control_2016.columns[boruta1.support_].to_list()
@@ -298,7 +303,7 @@ def boruta():
         max_iter = 100
     )
     
-    boruta2.fit(np.array(firma_secano_2016), np.array(secano_2016.loc[ : , "Chl"]))
+    boruta2.fit(np.array(firma_secano_2016), np.array(secano_2016.loc[ : , target]))
     
     # print results grupo control
     green_area_secano = firma_secano_2016.columns[boruta2.support_].to_list()
@@ -322,7 +327,7 @@ def boruta():
     )
     
     # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2017), np.array(control_2017.loc[ : , "Chl"]))
+    boruta1.fit(np.array(firma_control_2017), np.array(control_2017.loc[ : , target]))
     
     # print results grupo control
     green_area_control = firma_control_2017.columns[boruta1.support_].to_list()
@@ -344,7 +349,7 @@ def boruta():
         max_iter = 100
     )
     
-    boruta2.fit(np.array(firma_secano_2017), np.array(secano_2017.loc[ : , "Chl"]))
+    boruta2.fit(np.array(firma_secano_2017), np.array(secano_2017.loc[ : , target]))
     
     # print results grupo control
     green_area_secano = firma_secano_2017.columns[boruta2.support_].to_list()
@@ -409,7 +414,7 @@ def lasso():
     max = 150
     # recordar: contar los atributos con importancia >0 para establecer threshold
     # Grupo control 2014
-    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2014, control_2014.loc[ : , "Chl"])
+    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2014, control_2014.loc[ : , target])
     importancia_c = np.abs(lasso_control.coef_)
     # print(importancia_c[:max]) # primeros 100
     # print(importancia_c[::-1][:max]) # ultimos 100
@@ -445,7 +450,7 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2014
-    lasso_secano = LassoCV(max_iter = 20000).fit(firma_secano_2014, secano_2014.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 20000).fit(firma_secano_2014, secano_2014.loc[ : , target])
     importancia_s = np.abs(lasso_secano.coef_)
     #print(importancia_s)
     
@@ -455,7 +460,7 @@ def lasso():
     for i in range(len(importancia_s)):
         if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
     
     attrs_s = importancia_s.argsort()[::-1][:attr_n]
@@ -472,7 +477,7 @@ def lasso():
     
     
     # Grupo control 2015
-    lasso_control = LassoCV(max_iter = 6000).fit(firma_control_2015, control_2015.loc[ : , "Chl"])
+    lasso_control = LassoCV(max_iter = 6000).fit(firma_control_2015, control_2015.loc[ : , target])
     importancia_c = np.abs(lasso_control.coef_)
     # print("grupo control 2015")
     # print(importancia_c.argsort()[::-1][:100])
@@ -487,7 +492,7 @@ def lasso():
     for i in range(len(importancia_c)):
         if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
     
     attrs_c = importancia_c.argsort()[::-1][:attr_n]
@@ -505,7 +510,7 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2015
-    lasso_secano = LassoCV(max_iter = 26000).fit(firma_secano_2015, secano_2015.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 26000).fit(firma_secano_2015, secano_2015.loc[ : , target])
     importancia_s = np.abs(lasso_secano.coef_)
     #print(importancia_s)
     
@@ -515,7 +520,7 @@ def lasso():
     for i in range(len(importancia_s)):
         if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
     
     attrs_s = importancia_s.argsort()[::-1][:attr_n]
@@ -532,7 +537,7 @@ def lasso():
     
     
     # Grupo control 2016
-    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2016, control_2016.loc[ : , "Chl"])
+    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2016, control_2016.loc[ : , target])
     importancia_c = np.abs(lasso_control.coef_)
     #print(importancia_c)
     
@@ -545,7 +550,7 @@ def lasso():
     for i in range(len(importancia_c)):
         if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
     
     attrs_c = importancia_c.argsort()[::-1][:attr_n]
@@ -563,7 +568,7 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2016
-    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2016, secano_2016.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2016, secano_2016.loc[ : , target])
     importancia_s = np.abs(lasso_secano.coef_)
     #print(importancia_s)
     
@@ -574,7 +579,7 @@ def lasso():
     for i in range(len(importancia_s)):
         if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
     
     attrs_s = importancia_s.argsort()[::-1][:attr_n]
@@ -591,7 +596,7 @@ def lasso():
     
     
     # Grupo control 2017
-    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2017, control_2017.loc[ : , "Chl"])
+    lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2017, control_2017.loc[ : , target])
     importancia_c = np.abs(lasso_control.coef_)
     # print(importancia_c)
     
@@ -604,7 +609,7 @@ def lasso():
     for i in range(len(importancia_c)):
         if importancia_c[importancia_c.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
     
     attrs_c = importancia_c.argsort()[::-1][:attr_n]
@@ -622,7 +627,7 @@ def lasso():
     # cantidad máxima tentativa de atributos: 37
     
     # Grupo secano 2017
-    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2017, secano_2017.loc[ : , "Chl"])
+    lasso_secano = LassoCV(max_iter = 10000).fit(firma_secano_2017, secano_2017.loc[ : , target])
     importancia_s = np.abs(lasso_secano.coef_)
     # print(importancia_s)
     
@@ -633,7 +638,7 @@ def lasso():
     for i in range(len(importancia_s)):
         if importancia_s[importancia_s.argsort()[::-1][i]] == 0 or i >= max:
             attr_n = i
-            print("indice del primer valor 0: " + str(attr_n))
+            # print("indice del primer valor 0: " + str(attr_n))
             break
         
     attrs_s = importancia_s.argsort()[::-1][:attr_n]
@@ -653,105 +658,128 @@ def lasso():
 def rec_feat_elim():
     print("Ejecutando Recursive Feature Elimination...")
     # Grupo control 2014 ######################
-    rfecv = RFECV(estimator = DecisionTreeRegressor)
-    model = DecisionTreeRegressor()
-    pipeline = Pipeline(steps = [('s', rfecv), ('m', model)])
+    # rfecv = RFECV(estimator = DecisionTreeRegressor)
+    # model = DecisionTreeRegressor()
+    # pipeline = Pipeline(steps = [('s', rfecv), ('m', model)])
+    # # evaluar el modelo
+    # cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+    # n_scores = cross_val_score(pipeline, firma_control_2014, control_2014.loc[ : , target], scoring='accuracy', cv = cv, n_jobs=-1, error_score='raise')
+    # print('Nro óptimo de atributos: {}'.format(rfecv.n_features_))
     
-    # evaluar el modelo
-    cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
-    n_scores = cross_val_score(pipeline, firma_control_2014, control_2014.loc[ : , "Chl"], scoring='accuracy', cv = cv, n_jobs=-1, error_score='raise')
+    # grupo control 2014
+    nof_list = np.arange(1, 2150)
+    high_score = 0
     
-    print('Nro óptimo de atributos: {}'.format(rfecv.n_features_))
-    
-    
-    return # fin RFE ---------------------------------------------------------
+    nof = 0
+    score_list = []
+    for n in range(len(nof_list)):
+        x_train, x_test, y_train, y_test = train_test_split(
+            firma_control_2014,
+            control_2014.loc[:, target],
+            test_size = 0.3,
+            random_state = 0
+            )
+        model = LinearRegression()
+        rfe = RFE(model, nof_list[n])
+        x_train_rfe = rfe.fit_transform(x_train, y_train)
+        x_test_rfe = rfe.transform(x_test)
+        model.fit(x_train_rfe, y_train)
+        score = model.score(x_test_rfe, y_test)
+        score_list.append(score)
+        if score > high_score:
+            high_score = score
+            nof = nof_list[n]
+            
+    print("Número óptimo de atributos: %d" %nof)
+    print("Puntaje con %d atributos: %f" % (nof, high_score))
+    return
 
 def kbest():
     print("Ejecutando K-Best...")
     # grupo control 2014 #####################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_control_2014, control_2014.loc[:, "Chl"])
+    f_selector.fit(firma_control_2014, control_2014.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2014")
+    plt.title("Grupo control 2014 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo secano 2014 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_secano_2014, secano_2014.loc[:, "Chl"])
+    f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2014")
+    plt.title("Grupo secano 2014 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo control 2015 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_control_2015, control_2015.loc[:, "Chl"])
+    f_selector.fit(firma_control_2015, control_2015.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2015")
+    plt.title("Grupo control 2015 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo secano 2015 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_secano_2015, secano_2015.loc[:, "Chl"])
+    f_selector.fit(firma_secano_2015, secano_2015.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2015")
+    plt.title("Grupo secano 2015 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo control 2016 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_control_2016, control_2016.loc[:, "Chl"])
+    f_selector.fit(firma_control_2016, control_2016.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2016")
+    plt.title("Grupo control 2016 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo secano 2016 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_secano_2016, secano_2016.loc[:, "Chl"])
+    f_selector.fit(firma_secano_2016, secano_2016.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2016")
+    plt.title("Grupo secano 2016 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo control 2017 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_control_2017, control_2017.loc[:, "Chl"])
+    f_selector.fit(firma_control_2017, control_2017.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2017")
+    plt.title("Grupo control 2017 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
     
     # grupo secano 2017 ######################
     f_selector = SelectKBest(score_func=f_regression, k='all')
-    f_selector.fit(firma_secano_2017, secano_2017.loc[:, "Chl"])
+    f_selector.fit(firma_secano_2017, secano_2017.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2017")
+    plt.title("Grupo secano 2017 (" + target + ")")
     plt.xlabel("Longitud de onda")
     plt.ylabel("F-value")
     plt.show()
@@ -762,7 +790,7 @@ def kbest():
 print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
 print("1:\tBoruta.")
 print("2:\tLasso.")
-print("3:\tTest.")
+print("3:\tRFE.")
 print("4:\tK-Best.")
 print("5:\tTodos los anteriores.")
 print("6:\tSalir.")
@@ -784,7 +812,7 @@ while 1:
         
     elif op == '3':
         start = time.perf_counter()
-        print("No hago nada, solo testeo....")
+        rec_feat_elim()
         end = time.perf_counter()
         print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
     
@@ -812,7 +840,7 @@ while 1:
     print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
     print("1:\tBoruta.")
     print("2:\tLasso.")
-    print("3:\tTest.")
+    print("3:\tRFE.")
     print("4:\tK-Best.")
     print("5:\tTodos los anteriores.")
     print("6:\tSalir.")
