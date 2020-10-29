@@ -723,11 +723,25 @@ def rec_feat_elim():
 
 def kbest_corr():
     print("Ejecutando SelectK-Best (Correlation)...")
-    my_k = math.ceil(2150*0.01)
+    my_k = math.ceil(2150*0.02)
     # my_k = 'all'
     # grupo control 2014 #####################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2014,
+                                                        control_2014.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_control_2014, control_2014.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2014: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -737,8 +751,23 @@ def kbest_corr():
     plt.show()
     
     # grupo secano 2014 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2014,
+                                                        secano_2014.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2014: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -748,8 +777,22 @@ def kbest_corr():
     plt.show()
     
     # grupo control 2015 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2015,
+                                                        control_2015.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_control_2015, control_2015.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2015: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -759,8 +802,23 @@ def kbest_corr():
     plt.show()
     
     # grupo secano 2015 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2015,
+                                                        secano_2015.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_secano_2015, secano_2015.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2015: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -770,8 +828,22 @@ def kbest_corr():
     plt.show()
     
     # grupo control 2016 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2016,
+                                                        control_2016.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_control_2016, control_2016.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2016: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -781,8 +853,23 @@ def kbest_corr():
     plt.show()
     
     # grupo secano 2016 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2016,
+                                                        secano_2016.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_secano_2016, secano_2016.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2016: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -792,8 +879,22 @@ def kbest_corr():
     plt.show()
     
     # grupo control 2017 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2017,
+                                                        control_2017.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_control_2017, control_2017.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2017: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -803,8 +904,22 @@ def kbest_corr():
     plt.show()
     
     # grupo secano 2017 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2017,
+                                                        secano_2017.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=f_regression, k=my_k)
-    f_selector.fit(firma_secano_2017, secano_2017.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2017: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -816,7 +931,7 @@ def kbest_corr():
 
 def kbest_mi():
     print("Ejecutando SelectK-Best (Mutual Information)...")
-    my_k = math.ceil(2150*0.01)
+    my_k = math.ceil(2150*0.015)
     # my_k = 'all'
     # grupo control 2014 #####################
     x_train, x_test, y_train, y_test = train_test_split(firma_control_2014,
@@ -825,7 +940,7 @@ def kbest_mi():
                                                         random_state=1)
     
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_control_2014, control_2014.loc[:, target])
+    f_selector.fit(x_train, y_train)
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
@@ -834,10 +949,7 @@ def kbest_mi():
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
         
-    print(elegidos)
-    
-    # for i in range(len(f_selector.get_support(True))):
-    #     print('Atributo %d_ %f' % (i, f_selector.get_support[i]))
+    print("Grupo control 2014: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -847,8 +959,23 @@ def kbest_mi():
     plt.show()
     
     # grupo secano 2014 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2014,
+                                                        secano_2014.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2014: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -858,8 +985,22 @@ def kbest_mi():
     plt.show()
     
     # grupo control 2015 #####################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2015,
+                                                        control_2015.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_control_2015, control_2015.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2015: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -869,8 +1010,23 @@ def kbest_mi():
     plt.show()
     
     # grupo secano 2015 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2015,
+                                                        secano_2015.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2015: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -880,8 +1036,22 @@ def kbest_mi():
     plt.show()
     
     # grupo control 2016 #####################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2016,
+                                                        control_2016.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_control_2016, control_2016.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2016: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -891,8 +1061,23 @@ def kbest_mi():
     plt.show()
     
     # grupo secano 2016 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2016,
+                                                        secano_2016.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_secano_2016, secano_2016.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2016: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -902,8 +1087,22 @@ def kbest_mi():
     plt.show()
     
     # grupo control 2017 #####################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2017,
+                                                        control_2017.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_control_2017, control_2017.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo control 2017: ", elegidos)
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -913,8 +1112,23 @@ def kbest_mi():
     plt.show()
     
     # grupo secano 2017 ######################
+    x_train, x_test, y_train, y_test = train_test_split(firma_secano_2017,
+                                                        secano_2017.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
     f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
-    f_selector.fit(firma_secano_2017, secano_2017.loc[:, target])
+    f_selector.fit(x_train, y_train)
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print("Grupo secano 2017: ", elegidos)
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
