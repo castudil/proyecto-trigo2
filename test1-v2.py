@@ -1,25 +1,29 @@
 # -*- coding: utf-8 -*-
 from sklearn.ensemble import RandomForestRegressor
+import math
 import time
 import pandas
 from boruta import BorutaPy
 import numpy as np
+from numpy import mean, std
 from sklearn.preprocessing import StandardScaler
 # from sklearn.decomposition import PCA
 # from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import LassoCV
-from sklearn.linear_model import LinearRegression
-from sklearn.feature_selection import RFE
+# from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import RFECV
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import RepeatedKFold
 from sklearn.model_selection import train_test_split
 # from sklearn.model_selection import cross_val_score
 # from sklearn.model_selection import RepeatedKFold
-# from sklearn.model_selection import RepeatedStratifiedKFold
 # from sklearn.feature_selection import RFECV
-# from sklearn.tree import DecisionTreeRegressor
-# from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.pipeline import Pipeline
 
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_regression
+from sklearn.feature_selection import mutual_info_regression
 # from sklearn.feature_selection import mutual_info_regression
 import matplotlib.pyplot as plt
 
@@ -27,7 +31,7 @@ import matplotlib.pyplot as plt
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
 
 # Variable a predecir
-target = "VPD"
+target = "Chl"
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -412,10 +416,12 @@ def boruta():
 def lasso():
     print("Ejecutando LASSO...")
     max = 150
-    # recordar: contar los atributos con importancia >0 para establecer threshold
     # Grupo control 2014
     lasso_control = LassoCV(max_iter = 10000).fit(firma_control_2014, control_2014.loc[ : , target])
     importancia_c = np.abs(lasso_control.coef_)
+    # for i in range(len(importancia_c)):
+    #     if importancia_c[i] > 0:
+    #         print(str(i) + " - " + str(importancia_c[i]))
     # print(importancia_c[:max]) # primeros 100
     # print(importancia_c[::-1][:max]) # ultimos 100
     # print(importancia_c.argsort()[::-1][:max]) # primeros 100 indices ordenados desc
@@ -446,6 +452,14 @@ def lasso():
     
     print("Atributos seleccionados (control 2014): {}".format(cols_aux))
     print("")
+    
+    # graficamos la importancia de cada atributo
+    # plt.bar(height=importancia_c, x=np.array(cols))
+    # plt.title("LASSO - Grupo control 2014 (" + target + ")")
+    # plt.xlabel("Longitud de onda")
+    # plt.ylabel("Importancia")
+    # plt.show()
+    
     # nota: luego de correr por primera vez el programa,
     # cantidad máxima tentativa de atributos: 37
     
@@ -657,6 +671,19 @@ def lasso():
 
 def rec_feat_elim():
     print("Ejecutando Recursive Feature Elimination...")
+    # Grupo control 2014
+    # create pipeline
+    rfe = RFECV(estimator=DecisionTreeRegressor())
+    model = DecisionTreeRegressor()
+    pipeline = Pipeline(steps=[('s',rfe),('m',model)])
+    # evaluate model
+    cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+    n_scores = cross_val_score(pipeline, firma_control_2014, control_2014.loc[:, target], scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1, error_score='raise')
+    # report performance
+    print('Accuracy: %.3f (%.3f), cantidad: %d' % (mean(n_scores), std(n_scores), n_scores))
+
+    
+    
     # Grupo control 2014 ######################
     # rfecv = RFECV(estimator = DecisionTreeRegressor)
     # model = DecisionTreeRegressor()
@@ -667,131 +694,244 @@ def rec_feat_elim():
     # print('Nro óptimo de atributos: {}'.format(rfecv.n_features_))
     
     # grupo control 2014
-    nof_list = np.arange(1, 2150)
-    high_score = 0
+    # nof_list = np.arange(1, 2150)
+    # high_score = 0
     
-    nof = 0
-    score_list = []
-    for n in range(len(nof_list)):
-        x_train, x_test, y_train, y_test = train_test_split(
-            firma_control_2014,
-            control_2014.loc[:, target],
-            test_size = 0.3,
-            random_state = 0
-            )
-        model = LinearRegression()
-        rfe = RFE(model, nof_list[n])
-        x_train_rfe = rfe.fit_transform(x_train, y_train)
-        x_test_rfe = rfe.transform(x_test)
-        model.fit(x_train_rfe, y_train)
-        score = model.score(x_test_rfe, y_test)
-        score_list.append(score)
-        if score > high_score:
-            high_score = score
-            nof = nof_list[n]
+    # nof = 0
+    # score_list = []
+    # for n in range(len(nof_list)):
+    #     x_train, x_test, y_train, y_test = train_test_split(
+    #         firma_control_2014,
+    #         control_2014.loc[:, target],
+    #         test_size = 0.3,
+    #         random_state = 0
+    #         )
+    #     model = LinearRegression()
+    #     rfe = RFE(model, nof_list[n])
+    #     x_train_rfe = rfe.fit_transform(x_train, y_train)
+    #     x_test_rfe = rfe.transform(x_test)
+    #     model.fit(x_train_rfe, y_train)
+    #     score = model.score(x_test_rfe, y_test)
+    #     score_list.append(score)
+    #     if score > high_score:
+    #         high_score = score
+    #         nof = nof_list[n]
             
-    print("Número óptimo de atributos: %d" %nof)
-    print("Puntaje con %d atributos: %f" % (nof, high_score))
+    # print("Número óptimo de atributos: %d" %nof)
+    # print("Puntaje con %d atributos: %f" % (nof, high_score))
     return
 
-def kbest():
-    print("Ejecutando K-Best...")
+def kbest_corr():
+    print("Ejecutando SelectK-Best (Correlation)...")
+    my_k = math.ceil(2150*0.01)
+    # my_k = 'all'
     # grupo control 2014 #####################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_control_2014, control_2014.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2014 (" + target + ")")
+    plt.title("KBest - Grupo control 2014 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo secano 2014 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2014 (" + target + ")")
+    plt.title("KBest - Grupo secano 2014 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo control 2015 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_control_2015, control_2015.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2015 (" + target + ")")
+    plt.title("KBest - Grupo control 2015 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo secano 2015 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_secano_2015, secano_2015.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2015 (" + target + ")")
+    plt.title("KBest - Grupo secano 2015 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo control 2016 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_control_2016, control_2016.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2016 (" + target + ")")
+    plt.title("KBest - Grupo control 2016 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo secano 2016 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_secano_2016, secano_2016.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2016 (" + target + ")")
+    plt.title("KBest - Grupo secano 2016 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo control 2017 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_control_2017, control_2017.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo control 2017 (" + target + ")")
+    plt.title("KBest - Grupo control 2017 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     
     # grupo secano 2017 ######################
-    f_selector = SelectKBest(score_func=f_regression, k='all')
+    f_selector = SelectKBest(score_func=f_regression, k=my_k)
     f_selector.fit(firma_secano_2017, secano_2017.loc[:, target])
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
-    plt.title("Grupo secano 2017 (" + target + ")")
+    plt.title("KBest - Grupo secano 2017 (" + target + ")")
     plt.xlabel("Longitud de onda")
-    plt.ylabel("F-value")
+    plt.ylabel("Importancia por Correlación")
     plt.show()
     return # fin k-best-------------------------------------------------------
+
+def kbest_mi():
+    print("Ejecutando SelectK-Best (Mutual Information)...")
+    my_k = math.ceil(2150*0.01)
+    # my_k = 'all'
+    # grupo control 2014 #####################
+    x_train, x_test, y_train, y_test = train_test_split(firma_control_2014,
+                                                        control_2014.loc[:, target],
+                                                        test_size=0.33,
+                                                        random_state=1)
+    
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_control_2014, control_2014.loc[:, target])
+    train_fs = f_selector.transform(x_train)
+    test_fs = f_selector.transform(x_test)
+    
+    elegidos = f_selector.get_support(True)
+    
+    for i in range(len(elegidos)):
+        elegidos[i] = elegidos[i] + 350
+        
+    print(elegidos)
+    
+    # for i in range(len(f_selector.get_support(True))):
+    #     print('Atributo %d_ %f' % (i, f_selector.get_support[i]))
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo control 2014 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo secano 2014 ######################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo secano 2014 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo control 2015 #####################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_control_2015, control_2015.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo control 2015 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo secano 2015 ######################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_secano_2014, secano_2014.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo secano 2015 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo control 2016 #####################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_control_2016, control_2016.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo control 2016 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo secano 2016 ######################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_secano_2016, secano_2016.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo secano 2016 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo control 2017 #####################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_control_2017, control_2017.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo control 2017 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    # grupo secano 2017 ######################
+    f_selector = SelectKBest(score_func=mutual_info_regression, k=my_k)
+    f_selector.fit(firma_secano_2017, secano_2017.loc[:, target])
+    
+    # plot
+    plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
+    plt.title("KBest - Grupo secano 2017 (" + target + ")")
+    plt.xlabel("Longitud de onda")
+    plt.ylabel("Importancia por Información Mutua")
+    plt.show()
+    
+    return
 
 # Inicio del programa ########################################################
 
 print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
 print("1:\tBoruta.")
 print("2:\tLasso.")
-print("3:\tRFE.")
-print("4:\tK-Best.")
+print("3:\tSelectK-Best (Mutual Information).")
+print("4:\tSelectK-Best (Correlation).")
 print("5:\tTodos los anteriores.")
 print("6:\tSalir.")
 
@@ -812,13 +952,13 @@ while 1:
         
     elif op == '3':
         start = time.perf_counter()
-        rec_feat_elim()
+        kbest_mi()
         end = time.perf_counter()
         print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
     
     elif op == '4':
         start = time.perf_counter()
-        kbest()
+        kbest_corr()
         end = time.perf_counter()
         print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
         
@@ -840,8 +980,8 @@ while 1:
     print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
     print("1:\tBoruta.")
     print("2:\tLasso.")
-    print("3:\tRFE.")
-    print("4:\tK-Best.")
+    print("3:\tSelectK-Best (Mutual Information).")
+    print("4:\tSelectK-Best (Correlation).")
     print("5:\tTodos los anteriores.")
     print("6:\tSalir.")
     op = input("Introduzca opción: ")
