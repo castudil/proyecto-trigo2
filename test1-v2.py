@@ -9,6 +9,10 @@ from numpy import mean, std
 from sklearn.preprocessing import StandardScaler
 # from sklearn.decomposition import PCA
 # from sklearn.feature_selection import SelectFromModel
+from sklearn import linear_model
+from feature_selection_ga import FeatureSelectionGA
+# from sklearn.metrics import accuracy_score
+from sklearn.metrics import r2_score
 from sklearn.linear_model import LassoCV
 # from sklearn.linear_model import LinearRegression
 from sklearn.feature_selection import RFECV
@@ -31,7 +35,7 @@ import matplotlib.pyplot as plt
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
 
 # Variable a predecir
-target = "Chl"
+target = "GS"
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -178,6 +182,49 @@ secano_2017.dropna(inplace = True)
 # Reasignamos estas variables, pero ahora se eliminaron los NAs y se estandarizó
 firma_control_2017 = control_2017.loc[ : , "350":"2500"]
 firma_secano_2017 = secano_2017.loc[ : , "350":"2500"]
+
+
+# Creamos una función fitness personalizada
+class CustomFitnessFunctionClass:
+    def __init__(self,n_total_features,n_splits = 5, alpha=0.01, *args,**kwargs):
+        """
+            Parameters
+            -----------
+            n_total_features :int
+            	Total number of features N_t.
+            n_splits :int, default = 5
+                Number of splits for cv
+            alpha :float, default = 0.01
+                Tradeoff between the classifier performance P and size of 
+                feature subset N_f with respect to the total number of features
+                N_t.
+            
+            verbose: 0 or 1
+        """
+        self.n_splits = n_splits
+        self.alpha = alpha
+        self.n_total_features = n_total_features
+
+    def calculate_fitness(self,model,x,y):
+        alpha = self.alpha
+        total_features = self.n_total_features
+
+        cv_set = np.repeat(-1.,x.shape[0])
+        skf = RepeatedKFold(n_splits = self.n_splits)
+        for train_index,test_index in skf.split(x,y):
+            x_train,x_test = x[train_index],x[test_index]
+            y_train,y_test = y[train_index],y[test_index]
+            if x_train.shape[0] != y_train.shape[0]:
+                raise Exception()
+            model.fit(x_train,y_train)
+            predicted_y = model.predict(x_test)
+            cv_set[test_index] = predicted_y
+        
+        # P = accuracy_score(y, cv_set)
+        P = r2_score(y, cv_set)
+        fitness = (alpha*(1.0 - P) + (1.0 - alpha)*(1.0 - (x.shape[1])/total_features))
+        return fitness
+
 
 
 def boruta():
@@ -723,8 +770,8 @@ def rec_feat_elim():
 
 def kbest_corr():
     print("Ejecutando SelectK-Best (Correlation)...")
-    my_k = math.ceil(2150*0.02)
-    # my_k = 'all'
+    # my_k = math.ceil(2150*0.02)
+    my_k = 'all'
     # grupo control 2014 #####################
     x_train, x_test, y_train, y_test = train_test_split(firma_control_2014,
                                                         control_2014.loc[:, target],
@@ -736,7 +783,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -761,7 +810,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -787,7 +838,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -812,7 +865,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -838,7 +893,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -863,7 +920,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -889,7 +948,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -914,7 +975,9 @@ def kbest_corr():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -944,7 +1007,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -969,7 +1034,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -995,7 +1062,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -1020,7 +1089,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -1046,7 +1117,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -1071,7 +1144,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -1097,7 +1172,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -1122,7 +1199,9 @@ def kbest_mi():
     train_fs = f_selector.transform(x_train)
     test_fs = f_selector.transform(x_test)
     
-    elegidos = f_selector.get_support(True)
+    # elegidos = f_selector.get_support(True)
+    
+    elegidos = calcular_75_sup(f_selector)
     
     for i in range(len(elegidos)):
         elegidos[i] = elegidos[i] + 350
@@ -1139,6 +1218,33 @@ def kbest_mi():
     
     return
 
+def ga():
+    print("Ejecutando Genetic Algorithm...")
+    # Grupo control 2014 ###################################
+    x = firma_control_2014
+    y = control_2014.loc[:, target]
+    model = linear_model.LinearRegression()
+    ff = CustomFitnessFunctionClass(n_total_features=x.shape[1], 
+                                    n_splits=3,
+                                    alpha=0.05)
+    fsga = FeatureSelectionGA(model, x, y, ff_obj = ff)
+    pop = fsga.generate(5000)
+    print(pop)
+    
+    return
+
+def calcular_75_sup(lista_importancia):
+    mediana = (np.max(lista_importancia.scores_)) / 2
+    print("max: " + str(np.max(lista_importancia.scores_)))
+    print("mediana: " + str(mediana))
+    val_75_sup = mediana + (mediana * 0.5)
+    print("75%: " + str(val_75_sup))
+    lista_75_sup = []
+    for i in range(len(lista_importancia.scores_)):
+        if lista_importancia.scores_[i] >= val_75_sup:
+            lista_75_sup.append(i)
+    return lista_75_sup
+
 # Inicio del programa ########################################################
 
 print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
@@ -1146,8 +1252,9 @@ print("1:\tBoruta.")
 print("2:\tLasso.")
 print("3:\tSelectK-Best (Mutual Information).")
 print("4:\tSelectK-Best (Correlation).")
-print("5:\tTodos los anteriores.")
-print("6:\tSalir.")
+print("5:\tGenetic Algorithm.")
+print("6:\tTodos los anteriores.")
+print("7:\tSalir.")
 
 op = input("Introduzca opción: ")
 
@@ -1178,12 +1285,18 @@ while 1:
         
     elif op == '5':
         start = time.perf_counter()
+        ga()
+        end = time.perf_counter()
+        print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
+        
+    elif op == '6':
+        start = time.perf_counter()
         boruta()
         lasso()
         end = time.perf_counter()
         print(f'Tiempo de ejecución: {end - start:0.2f} segundos.')
         
-    elif op == '6':
+    elif op == '7':
         print("Fin del programa.")
         break
         
@@ -1196,9 +1309,20 @@ while 1:
     print("2:\tLasso.")
     print("3:\tSelectK-Best (Mutual Information).")
     print("4:\tSelectK-Best (Correlation).")
-    print("5:\tTodos los anteriores.")
-    print("6:\tSalir.")
+    print("5:\tGenetic Algorithm.")
+    print("6:\tTodos los anteriores.")
+    print("7:\tSalir.")
     op = input("Introduzca opción: ")
+
+
+
+
+
+
+
+
+
+
 
 
 
