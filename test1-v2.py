@@ -30,12 +30,13 @@ from sklearn.feature_selection import f_regression
 from sklearn.feature_selection import mutual_info_regression
 # from sklearn.feature_selection import mutual_info_regression
 import matplotlib.pyplot as plt
+import scipy.cluster.hierarchy as hcluster
 
 # leer csv
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
 
 # Variable a predecir
-target = "GS"
+target = "Chl"
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -791,6 +792,8 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2014: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -818,6 +821,7 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2014: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -846,6 +850,8 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2015: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -873,6 +879,7 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2015: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -901,6 +908,8 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2016: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -928,6 +937,7 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2016: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -956,6 +966,8 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2017: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -983,6 +995,8 @@ def kbest_corr():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2017: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -1244,6 +1258,41 @@ def calcular_75_sup(lista_importancia):
         if lista_importancia.scores_[i] >= val_75_sup:
             lista_75_sup.append(i)
     return lista_75_sup
+
+def rangos_clustering(data):
+    # se revisa si el parámetro viene vacío
+    if len(data) == 0:
+        print("No hay datos.")
+        return
+    
+    if len(data) == 1:
+        return data
+    
+    # convertimos los datos de la lista a integer
+    for i in range(len(data)):
+        data[i] = int(data[i])
+    
+    ndata = [[d, d] for d in data]
+    new_data = np.array(ndata)
+    
+    thresh = (11.0/100.0) * (max(data) - min(data))
+    
+    clusters = hcluster.fclusterdata(new_data, thresh, criterion = "distance")
+    tot_clusters = max(clusters)
+    
+    clustered_index = []
+    for i in range(tot_clusters):
+        clustered_index.append([])
+    
+    for i in range(len(clusters)):
+        clustered_index[clusters[i] - 1].append(i)
+        
+    rngs = []
+    for x in clustered_index:
+        clustered_index_x = [data[y] for y in x]
+        rngs.append((min(clustered_index_x), max(clustered_index_x)))
+    
+    return rngs
 
 # Inicio del programa ########################################################
 
