@@ -248,8 +248,11 @@ def boruta():
     green_area_control = firma_control_2014.columns[boruta1.support_].to_list()
     blue_area_control = firma_control_2014.columns[boruta1.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_control)
+    
     print('Atributos importantes (grupo control 2014):', green_area_control)
     print('Atributos tentativos (grupo control 2014):', blue_area_control)
+    print("Rangos: ", rangos_clustering(green_area_control))
     
     print("")
     
@@ -270,8 +273,11 @@ def boruta():
     green_area_secano = firma_secano_2014.columns[boruta2.support_].to_list()
     blue_area_secano = firma_secano_2014.columns[boruta2.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_secano)
+    
     print('Atributos importantes (grupo secano 2014):', green_area_secano)
     print('Atributos tentativos (grupo secano 2014):', blue_area_secano)
+    print("Rangos: ", rangos_clustering(green_area_secano))
     
     print("")
     
@@ -293,8 +299,11 @@ def boruta():
     green_area_control = firma_control_2015.columns[boruta1.support_].to_list()
     blue_area_control = firma_control_2015.columns[boruta1.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_control) 
+    
     print('Atributos importantes (grupo control 2015):', green_area_control)
     print('Atributos tentativos (grupo control 2015):', blue_area_control)
+    print("Rangos: ", rangos_clustering(green_area_control))
     
     print("")
     
@@ -315,8 +324,11 @@ def boruta():
     green_area_secano = firma_secano_2015.columns[boruta2.support_].to_list()
     blue_area_secano = firma_secano_2015.columns[boruta2.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_secano)
+    
     print('Atributos importantes (grupo secano 2015):', green_area_secano)
     print('Atributos tentativos (grupo secano 2015):', blue_area_secano)
+    print("Rangos: ", rangos_clustering(green_area_secano))
     
     print("")
     
@@ -339,8 +351,11 @@ def boruta():
     green_area_control = firma_control_2016.columns[boruta1.support_].to_list()
     blue_area_control = firma_control_2016.columns[boruta1.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_control)
+    
     print('Atributos importantes (grupo control 2016):', green_area_control)
     print('Atributos tentativos (grupo control 2016):', blue_area_control)
+    print("Rangos: ", rangos_clustering(green_area_control))
     
     print("")
     
@@ -361,8 +376,11 @@ def boruta():
     green_area_secano = firma_secano_2016.columns[boruta2.support_].to_list()
     blue_area_secano = firma_secano_2016.columns[boruta2.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_secano)
+    
     print('Atributos importantes (grupo secano 2016):', green_area_secano)
     print('Atributos tentativos (grupo secano 2016):', blue_area_secano)
+    print("Rangos: ", rangos_clustering(green_area_secano))
     
     print("")
     
@@ -385,8 +403,11 @@ def boruta():
     green_area_control = firma_control_2017.columns[boruta1.support_].to_list()
     blue_area_control = firma_control_2017.columns[boruta1.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_control)
+    
     print('Atributos importantes (grupo control 2017):', green_area_control)
     print('Atributos tentativos (grupo control 2017):', blue_area_control)
+    print("Rangos: ", rangos_clustering(green_area_control))
     
     print("")
     
@@ -407,8 +428,11 @@ def boruta():
     green_area_secano = firma_secano_2017.columns[boruta2.support_].to_list()
     blue_area_secano = firma_secano_2017.columns[boruta2.support_weak_].to_list()
     
+    green_area_control = string_to_int(green_area_secano)
+    
     print('Atributos importantes (grupo secano 2017):', green_area_secano)
     print('Atributos tentativos (grupo secano 2017):', blue_area_secano)
+    print("Rangos: ", rangos_clustering(green_area_secano))
     
     print("")
     
@@ -499,6 +523,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2014): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     
     # graficamos la importancia de cada atributo
@@ -535,6 +560,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2014): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     
     
@@ -567,6 +593,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2015): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     # nota: luego de correr por primera vez el programa,
     # cantidad máxima tentativa de atributos: 37
@@ -595,6 +622,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2015): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     
     
@@ -625,6 +653,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2016): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     # nota: luego de correr por primera vez el programa,
     # cantidad máxima tentativa de atributos: 37
@@ -654,6 +683,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2016): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     
     
@@ -684,6 +714,7 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (control 2017): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     # nota: luego de correr por primera vez el programa,
     # cantidad máxima tentativa de atributos: 37
@@ -713,11 +744,12 @@ def lasso():
     cols_aux = np.sort(cols_aux)
     
     print("Atributos seleccionados (secano 2017): {}".format(cols_aux))
+    print("Rangos: ", rangos_clustering(cols_aux))
     print("")
     return # fin lasso --------------------------------------------------------
 
 
-def rec_feat_elim():
+def rec_feat_elim(): # no funcionando
     print("Ejecutando Recursive Feature Elimination...")
     # Grupo control 2014
     # create pipeline
@@ -1029,6 +1061,8 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2014: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -1056,6 +1090,7 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2014: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -1084,6 +1119,8 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2015: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -1111,6 +1148,7 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2015: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -1139,6 +1177,8 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2016: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -1166,6 +1206,7 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2016: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -1194,6 +1235,8 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo control 2017: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
+    print("")
     
     # plot
     plt.bar([i + 350 for i in range(len(f_selector.scores_))], f_selector.scores_)
@@ -1221,6 +1264,7 @@ def kbest_mi():
         elegidos[i] = elegidos[i] + 350
         
     print("Grupo secano 2017: ", elegidos)
+    print("Rangos: ", rangos_clustering(elegidos))
     print("")
     
     # plot
@@ -1268,10 +1312,6 @@ def rangos_clustering(data):
     if len(data) == 1:
         return data
     
-    # convertimos los datos de la lista a integer
-    for i in range(len(data)):
-        data[i] = int(data[i])
-    
     ndata = [[d, d] for d in data]
     new_data = np.array(ndata)
     
@@ -1294,6 +1334,12 @@ def rangos_clustering(data):
     
     return rngs
 
+
+def string_to_int(lista):
+    for i in range(len(lista)):
+        lista[i] = int(lista[i])
+    return lista
+
 # Inicio del programa ########################################################
 
 print("Seleccione el algoritmo de selección de atributos que desea ejecutar: ")
@@ -1306,6 +1352,8 @@ print("6:\tTodos los anteriores.")
 print("7:\tSalir.")
 
 op = input("Introduzca opción: ")
+
+print("Variable objetivo:", target)
 
 while 1:
     if op == '1':
@@ -1342,6 +1390,8 @@ while 1:
         start = time.perf_counter()
         boruta()
         lasso()
+        kbest_mi()
+        kbest_corr()
         end = time.perf_counter()
         print(f'Tiempo de ejecución: {end - start:0.2f} segundos.')
         
