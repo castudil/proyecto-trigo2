@@ -32,11 +32,14 @@ from sklearn.feature_selection import mutual_info_regression
 import matplotlib.pyplot as plt
 import scipy.cluster.hierarchy as hcluster
 
+import my_boruta
+
+
 # leer csv
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
 
 # Variable a predecir
-target = "GS"
+target = "Chl"
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -185,6 +188,9 @@ firma_control_2017 = control_2017.loc[ : , "350":"2500"]
 firma_secano_2017 = secano_2017.loc[ : , "350":"2500"]
 
 
+
+
+
 # Creamos una función fitness personalizada
 class CustomFitnessFunctionClass:
     def __init__(self,n_total_features,n_splits = 5, alpha=0.01, *args,**kwargs):
@@ -226,217 +232,6 @@ class CustomFitnessFunctionClass:
         fitness = (alpha*(1.0 - P) + (1.0 - alpha)*(1.0 - (x.shape[1])/total_features))
         return fitness
 
-
-
-def boruta():
-    print("Ejecutando Boruta...")
-    ### BORUTA grupo control 2014 #######################
-    forest1 = RandomForestRegressor(
-        n_jobs = -1, 
-        max_depth = 5
-    )
-    boruta1 = BorutaPy(
-        estimator = forest1, 
-        n_estimators = 'auto',
-        max_iter = 100 # number of trials to perform
-    )
-    
-    # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2014), np.array(control_2014.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_control = firma_control_2014.columns[boruta1.support_].to_list()
-    blue_area_control = firma_control_2014.columns[boruta1.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_control)
-    
-    print('Atributos importantes (grupo control 2014):', green_area_control)
-    print('Atributos tentativos (grupo control 2014):', blue_area_control)
-    print("Rangos: ", rangos_clustering(green_area_control))
-    
-    print("")
-    
-    ### BORUTA grupo secano 2014 ##########################
-    forest2 = RandomForestRegressor(
-        n_jobs= -1,
-        max_depth= 5
-    )
-    boruta2 = BorutaPy(
-        estimator = forest2,
-        n_estimators = 'auto',
-        max_iter = 100
-    )
-    
-    boruta2.fit(np.array(firma_secano_2014), np.array(secano_2014.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_secano = firma_secano_2014.columns[boruta2.support_].to_list()
-    blue_area_secano = firma_secano_2014.columns[boruta2.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_secano)
-    
-    print('Atributos importantes (grupo secano 2014):', green_area_secano)
-    print('Atributos tentativos (grupo secano 2014):', blue_area_secano)
-    print("Rangos: ", rangos_clustering(green_area_secano))
-    
-    print("")
-    
-    ### BORUTA grupo control 2015 #######################
-    forest1 = RandomForestRegressor(
-        n_jobs = -1, 
-        max_depth = 5
-    )
-    boruta1 = BorutaPy(
-        estimator = forest1, 
-        n_estimators = 'auto',
-        max_iter = 100 # number of trials to perform
-    )
-    
-    # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2015), np.array(control_2015.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_control = firma_control_2015.columns[boruta1.support_].to_list()
-    blue_area_control = firma_control_2015.columns[boruta1.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_control) 
-    
-    print('Atributos importantes (grupo control 2015):', green_area_control)
-    print('Atributos tentativos (grupo control 2015):', blue_area_control)
-    print("Rangos: ", rangos_clustering(green_area_control))
-    
-    print("")
-    
-    ### BORUTA grupo secano 2015 ##########################
-    forest2 = RandomForestRegressor(
-        n_jobs= -1,
-        max_depth= 5
-    )
-    boruta2 = BorutaPy(
-        estimator = forest2,
-        n_estimators = 'auto',
-        max_iter = 100
-    )
-    
-    boruta2.fit(np.array(firma_secano_2015), np.array(secano_2015.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_secano = firma_secano_2015.columns[boruta2.support_].to_list()
-    blue_area_secano = firma_secano_2015.columns[boruta2.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_secano)
-    
-    print('Atributos importantes (grupo secano 2015):', green_area_secano)
-    print('Atributos tentativos (grupo secano 2015):', blue_area_secano)
-    print("Rangos: ", rangos_clustering(green_area_secano))
-    
-    print("")
-    
-    
-    ### BORUTA grupo control 2016 #######################
-    forest1 = RandomForestRegressor(
-        n_jobs = -1, 
-        max_depth = 5
-    )
-    boruta1 = BorutaPy(
-        estimator = forest1, 
-        n_estimators = 'auto',
-        max_iter = 100 # number of trials to perform
-    )
-    
-    # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2016), np.array(control_2016.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_control = firma_control_2016.columns[boruta1.support_].to_list()
-    blue_area_control = firma_control_2016.columns[boruta1.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_control)
-    
-    print('Atributos importantes (grupo control 2016):', green_area_control)
-    print('Atributos tentativos (grupo control 2016):', blue_area_control)
-    print("Rangos: ", rangos_clustering(green_area_control))
-    
-    print("")
-    
-    ### BORUTA grupo secano 2016 ##########################
-    forest2 = RandomForestRegressor(
-        n_jobs= -1,
-        max_depth= 5
-    )
-    boruta2 = BorutaPy(
-        estimator = forest2,
-        n_estimators = 'auto',
-        max_iter = 100
-    )
-    
-    boruta2.fit(np.array(firma_secano_2016), np.array(secano_2016.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_secano = firma_secano_2016.columns[boruta2.support_].to_list()
-    blue_area_secano = firma_secano_2016.columns[boruta2.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_secano)
-    
-    print('Atributos importantes (grupo secano 2016):', green_area_secano)
-    print('Atributos tentativos (grupo secano 2016):', blue_area_secano)
-    print("Rangos: ", rangos_clustering(green_area_secano))
-    
-    print("")
-    
-    
-    ### BORUTA grupo control 2017 #######################
-    forest1 = RandomForestRegressor(
-        n_jobs = -1, 
-        max_depth = 5
-    )
-    boruta1 = BorutaPy(
-        estimator = forest1, 
-        n_estimators = 'auto',
-        max_iter = 100 # number of trials to perform
-    )
-    
-    # fit Boruta (it accepts np.array, not pd.DataFrame)
-    boruta1.fit(np.array(firma_control_2017), np.array(control_2017.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_control = firma_control_2017.columns[boruta1.support_].to_list()
-    blue_area_control = firma_control_2017.columns[boruta1.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_control)
-    
-    print('Atributos importantes (grupo control 2017):', green_area_control)
-    print('Atributos tentativos (grupo control 2017):', blue_area_control)
-    print("Rangos: ", rangos_clustering(green_area_control))
-    
-    print("")
-    
-    ## BORUTA grupo secano 2017 ##########################
-    forest2 = RandomForestRegressor(
-        n_jobs= -1,
-        max_depth= 5
-    )
-    boruta2 = BorutaPy(
-        estimator = forest2,
-        n_estimators = 'auto',
-        max_iter = 100
-    )
-    
-    boruta2.fit(np.array(firma_secano_2017), np.array(secano_2017.loc[ : , target]))
-    
-    # print results grupo control
-    green_area_secano = firma_secano_2017.columns[boruta2.support_].to_list()
-    blue_area_secano = firma_secano_2017.columns[boruta2.support_weak_].to_list()
-    
-    green_area_control = string_to_int(green_area_secano)
-    
-    print('Atributos importantes (grupo secano 2017):', green_area_secano)
-    print('Atributos tentativos (grupo secano 2017):', blue_area_secano)
-    print("Rangos: ", rangos_clustering(green_area_secano))
-    
-    print("")
-    
-    return # fin boruta -------------------------------------------------------
 
 # =============================================================================
 # print(df_chl_seca.shape)
@@ -1360,7 +1155,9 @@ print("Variable objetivo:", target)
 while 1:
     if op == '1':
         start = time.perf_counter()
-        boruta()
+        #boruta()
+        elegidos = my_boruta.my_boruta_init(target, firma_control_2014, control_2014)
+        print(rangos_clustering(elegidos))
         end = time.perf_counter()
         print(f"Tiempo de ejecución: {end - start:0.2f} segundos.")
     
@@ -1390,7 +1187,7 @@ while 1:
         
     elif op == '6':
         start = time.perf_counter()
-        boruta()
+        #boruta()
         lasso()
         kbest_mi()
         kbest_corr()
