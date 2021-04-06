@@ -36,7 +36,7 @@ import scipy.cluster.hierarchy as hcluster
 datos = pandas.read_csv("data-total.csv", header=0 ,delimiter=";", encoding='ISO-8859-1')
 
 # Variable a predecir
-target = "Chl"
+target = "GS"
 
 # filtramos los datos con las siguientes condiciones
 # Año = 2016
@@ -1062,6 +1062,7 @@ def kbest_mi():
         
     print("Grupo control 2014: ", elegidos)
     print("Rangos: ", rangos_clustering(elegidos))
+    # print("tipo datos rangos:", type(elegidos)) # tipo de variable
     print("")
     
     # plot
@@ -1292,6 +1293,7 @@ def ga():
     return
 
 def calcular_75_sup(lista_importancia):
+    #lista_importancia.describe()
     mediana = (np.max(lista_importancia.scores_)) / 2
     print("max: " + str(np.max(lista_importancia.scores_)))
     print("mediana: " + str(mediana))
@@ -1332,7 +1334,7 @@ def rangos_clustering(data):
         clustered_index_x = [data[y] for y in x]
         rngs.append((min(clustered_index_x), max(clustered_index_x)))
     
-    return rngs
+    return sorted(rngs)
 
 
 def string_to_int(lista):
