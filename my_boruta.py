@@ -19,6 +19,12 @@ def my_boruta_init(target, firma, control):
         n_estimators = 'auto',
         max_iter = 100 # number of trials to perform
     )
+
+    print("descripción firma_control")
+    print(firma.describe())
+    asd = control.loc[ : , target]
+    print("descripción control")
+    print(asd.describe())
     
     # fit Boruta (it accepts np.array, not pd.DataFrame)
     boruta.fit(np.array(firma), np.array(control.loc[ : , target]))
@@ -29,11 +35,11 @@ def my_boruta_init(target, firma, control):
     
     green_area = string_to_int(green_area)
     
-    print("Atributos importantes:", green_area)
-    print("Atributos tentativos:", blue_area)
+    #print("Atributos importantes:", green_area)
+    #print("Atributos tentativos:", blue_area)
     #print("Rangos:", rangos_clustering(green_area_control))
     
-    print("")
+    #print("")
     
     return green_area # fin boruta -------------------------------------------------------
         
