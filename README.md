@@ -1,7 +1,7 @@
 # Proyecto de titulación de tesis
 
 ### Resumen
-En este proyecto se utilizan algoritmos de selección de atributos para optimizar la lectura de firma espectral de plantas de trigo para alguna variable objetivo **target**
+En este proyecto se utilizan algoritmos de selección de atributos para optimizar la lectura de firma espectral de plantas de trigo para alguna variable objetivo.
 
 
 ### Los datos
